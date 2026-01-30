@@ -1,0 +1,36 @@
+HTML example
+
+
+<html>
+  <head>
+    <title>My Page</title>
+  </head>
+  <body>
+    <h1>Hello</h1>
+    <p>Welcome</p>
+  </body>
+</html>
+
+DOM structure diagram
+
+Document
+ └── html
+      ├── head
+      │    └── title
+      │         └── "My Page"
+      └── body
+           ├── h1
+           │    └── "Hello"
+           └── p
+                └── "Welcome"
+
+
+DOM Hierarchy diagram
+
+Document
+   |
+  HTML
+  /   \
+HEAD   BODY
+ |      |   \
+TITLE  H1    P
