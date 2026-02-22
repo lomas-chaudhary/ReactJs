@@ -11,6 +11,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [ '02-folder', '03-components', '04-props', '05-cards-project']
+      fail-fast: false
 
     steps:
       - name: Checkout code
@@ -21,16 +25,29 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: '05-cards-project/package-lock.json'
+          cache-dependency-path: '${{ matrix.project }}/package-lock.json'
+
+      - name: Check if project directory exists
+        id: check_dir
+        run: |
+          if [ -d "${{ matrix.project }}" ] && [ -f "${{ matrix.project }}/package.json" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
 
       - name: Install dependencies
+        if: steps.check_dir.outputs.exists == 'true'
         run: npm ci
-        working-directory: 05-cards-project
+        working-directory: ${{ matrix.project }}
 
       - name: Build application
+        if: steps.check_dir.outputs.exists == 'true'
         run: npm run build
-        working-directory: 05-cards-project
+        working-directory: ${{ matrix.project }}
 
       - name: Run linter
+        if: steps.check_dir.outputs.exists == 'true'
         run: npm run lint
-        working-directory: 05-cards-project
+        working-directory: ${{ matrix.project }}
